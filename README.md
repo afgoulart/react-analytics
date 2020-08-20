@@ -3,8 +3,8 @@
 </h3>
 
 <p align="center">
-  React Google Analytics Module <a href="https://facebook.github.io/react">React</a><br />
-  <a href="https://badge.fury.io/js/@arranjae/react-analytics"><img src="https://badge.fury.io/js/@arranjae/react-analytics.svg" /></a>
+  <a href="https://facebook.github.io/react">React</a> Analytics Module <br />
+  <a href="https://badge.fury.io/js/%40arranjae%2Freact-analytics"><img src="https://badge.fury.io/js/%40arranjae%2Freact-analytics.svg" alt="npm version" height="18"></a>
 </p>
 
 ### React Google Analytics Module
