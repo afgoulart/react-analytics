@@ -2,6 +2,11 @@
   "name": "@arranjae/react-analytics",
   "version": "1.0.0",
   "description": "The simple form to use react-ga module",
+  "author": {
+    "name": "André Filipe Goulart",
+    "email": "afgoulart.rj@gmail.com",
+    "url": "https://github.com/afgoulart"
+  },
   "main": "cjs/index.js",
   "module": "es6/index.js",
   "sideEffects": false,
@@ -21,7 +26,6 @@
     "build-umd": "rollup -c",
     "build-legacy": "babel es6 -D -d lib"
   },
-  "author": "André Filipe Goulart <afgoulart@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "@types/hoist-non-react-statics": "^3.0.1",
