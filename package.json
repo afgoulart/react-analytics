@@ -18,6 +18,9 @@
     "index.d.ts",
     "LICENSE"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "clean": "rimraf lib && rimraf es6 && rimraf cjs && rimraf umd",
     "build": "npm run clean && npm run build-es6 && npm run build-cjs && npm run build-umd && npm run build-legacy",
