@@ -18,6 +18,10 @@
     "index.d.ts",
     "LICENSE"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/afgoulart/react-analytics.git"
+  },
   "publishConfig": {
     "access": "public"
   },
