@@ -24,7 +24,10 @@
     "build-es6": "tsc",
     "build-cjs": "babel es6 -D -d cjs",
     "build-umd": "rollup -c",
-    "build-legacy": "babel es6 -D -d lib"
+    "build-legacy": "babel es6 -D -d lib",
+    "release:major": "release-it major",
+    "release:minor": "release-it minor",
+    "release": "release-it"
   },
   "license": "MIT",
   "dependencies": {
