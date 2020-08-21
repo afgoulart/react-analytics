@@ -92,11 +92,21 @@ This is 'react-ga' module
 // Root.jsx
 import React from 'react';
 import App from './App';
-import { AnalyticsProvider } from '@arranjae/react-Analytics';
+import { AnalyticsProvider } from '@arranjae/react-analytics';
 
 export default function Root() {
+  const config = {
+    trackerName: 'AnalyticsTracker',
+    trackerId: 'UA-000000-00',
+  };
+  const options = {
+    debug: process.env.NODE_ENV !== 'production',
+    testMode: process.env.NODE_ENV === 'test',
+    alwaysSendToDefaultTracker: false,
+  };
+
   return (
-    <AnalyticsProvider>
+    <AnalyticsProvider config={config} trackerInfo={config.trackerId} options={options}>
       <App />
     </AnalyticsProvider>
   );
@@ -106,16 +116,33 @@ export default function Root() {
 ```js
 // App.jsx
 import React from 'react';
-import { useAnalytics } from '@arranjae/react-Analytics';
+import { useAnalytics } from '@arranjae/react-analytics';
 
 import NameForm from './NameForm';
 
 function App() {
   const [analytics, config] = useAnalytics();
 
-  Analytics.pageView('/');
+  analytics.pageView('/');
 
-  return <div>Its works!! Look in developer tools yours events</div>;
+  return (
+    <div>
+      <h1>Its works!! Look in developer tools yours events</h1>
+      <button
+        onClick={() => {
+          analytics.event(
+            {
+              category: 'button-event',
+              action: 'clicked',
+            },
+            [config.trackerName]
+          );
+        }}
+      >
+        click me!
+      </button>
+    </div>
+  );
 }
 
 export default App;
@@ -127,11 +154,21 @@ export default App;
 // Root.jsx
 import React from 'react';
 import App from './App';
-import { AnalyticsProvider } from '@arranjae/react-Analytics';
+import { AnalyticsProvider } from '@arranjae/react-analytics';
 
 export default function Root() {
+  const config = {
+    trackerName: 'AnalyticsTracker',
+    trackerId: 'UA-000000-00',
+  };
+  const options = {
+    debug: process.env.NODE_ENV !== 'production',
+    testMode: process.env.NODE_ENV === 'test',
+    alwaysSendToDefaultTracker: false,
+  };
+
   return (
-    <AnalyticsProvider>
+    <AnalyticsProvider config={config} trackerInfo={config.trackerId} options={options}>
       <App />
     </AnalyticsProvider>
   );
@@ -141,39 +178,44 @@ export default function Root() {
 ```js
 // App.jsx
 import React, { Component } from 'react';
-import { instanceOf } from 'prop-types';
-import { withAnalytics, Analytics } from '@arranjae/react-Analytics';
-
-import NameForm from './NameForm';
+import { instanceOf, shape } from 'prop-types';
+import { withAnalytics, Analytics } from '@arranjae/react-analytics';
 
 class App extends Component {
   static propTypes = {
-    cookies: instanceOf(Cookies).isRequired,
+    analytics: instanceOf(Analytics).isRequired,
+    config: shape({}).isRequired,
   };
 
   constructor(props) {
     super(props);
 
-    const { cookies } = props;
-    this.state = {
-      name: cookies.get('name') || 'Ben',
-    };
+    const { analytics, config } = props;
+
+    this.analytics = analytics;
+    this.config = config;
   }
 
-  handleNameChange(name) {
-    const { cookies } = this.props;
-
-    cookies.set('name', name, { path: '/' });
-    this.setState({ name });
+  componentDidMount() {
+    this.analytics.pageView('/', [this.config.trackerName], 'Page Name');
   }
 
   render() {
-    const { name } = this.state;
-
     return (
       <div>
-        <NameForm name={name} onChange={this.handleNameChange.bind(this)} />
-        {this.state.name && <h1>Hello {this.state.name}!</h1>}
+        <button
+          onClick={() => {
+            this.analytics.event(
+              {
+                category: 'button-event',
+                action: 'clicked',
+              },
+              [this.config.trackerName]
+            );
+          }}
+        >
+          click me!
+        </button>
       </div>
     );
   }
@@ -187,16 +229,39 @@ export default withAnalytics(App);
 ```js
 // src/components/App.js
 import React from 'react';
-import { useAnalytics } from '@arranjae/react-Analytics';
-
-import NameForm from './NameForm';
+import { useAnalytics } from '@arranjae/react-analytics';
 
 function App() {
   const [analytics, config] = useAnalytics();
 
-  Analytics.pageView('/', [config.trackerName]); // this option "config.tracker" is optional when has one tracker
+  analytics.pageView('/', [config.trackerName]); // this option "config.tracker" is optional when has one tracker
 
-  return <div></div>;
+  analytics.event(
+    {
+      category: 'enter-page',
+      action: 'use react-analytics',
+    },
+    [config.trackerName]
+  );
+
+  return (
+    <div>
+      <h1>It's works!!</h1>
+      <button
+        onClick={() => {
+          analytics.event(
+            {
+              category: 'button-event',
+              action: 'clicked',
+            },
+            [config.trackerName]
+          );
+        }}
+      >
+        click me!
+      </button>
+    </div>
+  );
 }
 
 export default App;
@@ -206,14 +271,24 @@ export default App;
 // src/server.js
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import { AnalyticsProvider } from '@arranjae/react-Analytics';
+import { AnalyticsProvider } from '@arranjae/react-analytics';
 
 import Html from './components/Html';
 import App from './components/App';
 
 export default function middleware(req, res) {
+  const config = {
+    trackerName: 'AnalyticsTracker',
+    trackerId: 'UA-000000-00',
+  };
+  const options = {
+    debug: process.env.NODE_ENV !== 'production',
+    testMode: process.env.NODE_ENV === 'test',
+    alwaysSendToDefaultTracker: false,
+  };
+
   const markup = ReactDOMServer.renderToString(
-    <AnalyticsProvider config={{}} trackerInfo={'UA-000000-00'} options={{}}>
+    <AnalyticsProvider config={config} trackerInfo={config.trackerId} options={options}>
       <App />
     </AnalyticsProvider>
   );
@@ -228,14 +303,24 @@ export default function middleware(req, res) {
 // src/client.js
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { AnalyticsProvider } from '@arranjae/react-Analytics';
+import { AnalyticsProvider } from '@arranjae/react-analytics';
 
 import App from './components/App';
 
 const appEl = document.getElementById('main-app');
 
+const config = {
+  trackerName: 'AnalyticsTracker',
+  trackerId: 'UA-000000-00',
+};
+const options = {
+  debug: process.env.NODE_ENV !== 'production',
+  testMode: process.env.NODE_ENV === 'test',
+  alwaysSendToDefaultTracker: false,
+};
+
 ReactDOM.render(
-  <AnalyticsProvider config={{}} trackerInfo={'UA-000000-00'} options={{}}>
+  <AnalyticsProvider config={config} trackerInfo={config.trackerId} options={options}>
     <App />
   </AnalyticsProvider>,
   appEl

@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { Consumer } from './AnalyticsContext';
 import { AnalyticsProps, AnalyticsContextProps } from './types';
+import { config } from 'process';
 
 // Only way to make function modules work with both TypeScript and Rollup
 const hoistStatics = require('hoist-non-react-statics');
@@ -26,7 +27,11 @@ export default function withAnalytics<T extends AnalyticsProps>(
   }
 
   const ForwardedComponent: any = React.forwardRef((props: any, ref: any) => {
-    return <Consumer>{({ reactGA }: AnalyticsContextProps) => <AnaliticWrapper reactGA={reactGA} {...props} forwardedRef={ref} />}</Consumer>;
+    return (
+      <Consumer>
+        {({ reactGA, config }: AnalyticsContextProps) => <AnaliticWrapper reactGA={reactGA} config={config} {...props} forwardedRef={ref} />}
+      </Consumer>
+    );
   });
 
   ForwardedComponent.displayName = AnaliticWrapper.displayName;
